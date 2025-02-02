@@ -1,26 +1,17 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Инициализация Telegram WebApp
-    const tg = window.Telegram.WebApp;
-    tg.expand(); // Раскрываем на всю высоту
+const express = require('express');
+const path = require('path');
+const app = express();
+const port = process.env.PORT || 3000;
 
-    // Получаем данные пользователя
-    const user = tg.initDataUnsafe.user;
-    if (user) {
-        // Устанавливаем аватар пользователя
-        const avatarElement = document.getElementById('userAvatar');
-        if (user.photo_url) {
-            avatarElement.src = user.photo_url;
-        } else {
-            // Если аватар отсутствует, используем заглушку
-            avatarElement.src = 'https://via.placeholder.com/100';
-        }
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
 
-        // Устанавливаем приветствие с именем пользователя
-        const greetingElement = document.getElementById('greeting');
-        const userName = user.first_name || 'Гость';
-        greetingElement.textContent = `Привет, ${userName}! 👋`;
-    }
+// Main route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
-    // Уведомляем Telegram, что приложение готово
-    tg.ready();
+// Start server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
